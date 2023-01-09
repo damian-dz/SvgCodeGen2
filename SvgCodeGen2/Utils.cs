@@ -57,6 +57,7 @@ public static class Utils
             "svg" => typeof(Svg),
             "circle" => typeof(SvgCircle),
             "line" => typeof(SvgLine),
+            "path" => typeof(SvgPath),
             "polyline" => typeof(SvgPolyline),
             "g" => typeof(SvgGroup),
             _ => typeof(Type)

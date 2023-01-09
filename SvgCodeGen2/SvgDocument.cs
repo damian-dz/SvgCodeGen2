@@ -55,5 +55,4 @@ public class SvgDocument
         return doc == null ? string.Empty : doc.ToString();
     }
 
-
 }

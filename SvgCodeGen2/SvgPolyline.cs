@@ -11,7 +11,6 @@ namespace SvgCodeGen2;
 public sealed class SvgPolyline : SvgElement
 {
 
-
     [XmlAttribute("points")]
     public string? Points;
 }
