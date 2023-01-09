@@ -50,44 +50,40 @@ public partial class SvgPath : SvgElement
             if (commandLetters.Contains(dU) || i == d.Length - 1)
             {
                 char c = d[idxStart - 1];
-                int idxEnd = i == d.Length - 1 ? i + 1 : i;
                 string text = d[idxStart..i];
-                List<string> args = Command.Parse(text);
-                Console.WriteLine(args.Count);
+                List<string> tokens = Command.Parse(text);
                 char cU = char.ToUpper(c);
                 bool isRelative = char.IsLower(c);
                 if (cU == 'M')
                 {
-                    if (args.Count % 2 == 0)
+                    if (tokens.Count % 2 == 0)
                     {
-                        for (int j = 0; j < args.Count; j +=2)
-                            commands.Add(new M(args.GetRange(j, 2), isRelative));
+                        for (int j = 0; j < tokens.Count; j +=2)
+                            commands.Add(new M(tokens.GetRange(j, 2), isRelative));
                     }
                 }
                 else if (cU == 'L')
                 {
-                    if (args.Count % 2 == 0)
+                    if (tokens.Count % 2 == 0)
                     {
-                        for (int j = 0; j < args.Count; j += 2)
-                            commands.Add(new L(args.GetRange(j, 2), isRelative));
+                        for (int j = 0; j < tokens.Count; j += 2)
+                            commands.Add(new L(tokens.GetRange(j, 2), isRelative));
                     }
                 }
-
                 else if (cU == 'C')
                 {
-                    if (args.Count % 6 == 0)
+                    if (tokens.Count % 6 == 0)
                     {
-                        for (int j = 0; j < args.Count; j += 6)
-                            commands.Add(new C(args.GetRange(j, 6), isRelative));
+                        for (int j = 0; j < tokens.Count; j += 6)
+                            commands.Add(new C(tokens.GetRange(j, 6), isRelative));
                     }
                 }
-
                 else if (cU == 'A')
                 {
-                    if (args.Count % 7 == 0)
+                    if (tokens.Count % 7 == 0)
                     {
-                        for (int j = 0; j < args.Count; j += 7)
-                            commands.Add(new A(args.GetRange(j, 7), isRelative));
+                        for (int j = 0; j < tokens.Count; j += 7)
+                            commands.Add(new A(tokens.GetRange(j, 7), isRelative));
                     }
                 }
                 if (dU == 'Z')
