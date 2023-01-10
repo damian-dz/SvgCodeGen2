@@ -73,7 +73,7 @@ public partial class SvgPath
 
         public override string ToString()
         {
-            return $"{(IsRelative ? 'a' : 'A')}{Rx} {Ry} {XRot} {Convert.ToInt32(Large)} {Convert.ToInt32(Sweep)} {X} {Y}";
+            return $"{(IsRelative ? 'a' : 'A')}{Rx},{Ry} {XRot} {Convert.ToInt32(Large)},{Convert.ToInt32(Sweep)} {X},{Y}";
         }
 
     }

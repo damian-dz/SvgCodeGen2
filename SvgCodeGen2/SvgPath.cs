@@ -13,6 +13,9 @@ public partial class SvgPath : SvgElement
     [XmlAttribute("d")]
     public string? D;
 
+    [XmlIgnore]
+    public List<Command>? Commands { get; set; }
+
     public void ArcTo(double rx, double ry, double xRot, bool large, bool sweep, double x, double y)
     {
         D += $" A{rx} {ry} {xRot} {Convert.ToInt32(large)} {Convert.ToInt32(sweep)} {x} {y}";
@@ -34,7 +37,16 @@ public partial class SvgPath : SvgElement
         D += $"{space}M{x} {y}";
     }
 
-    public List<Command> ParseToCommands()
+    public void CommandsToData()
+    {
+        if (Commands == null)
+            return;
+        D = string.Empty;
+        foreach (var command in Commands)
+            D += command.ToString();
+    }
+
+    public void DataToCommands()
     {
         if (string.IsNullOrWhiteSpace(D))
             throw new ArgumentException("The path string cannot be empty.");
@@ -42,8 +54,8 @@ public partial class SvgPath : SvgElement
         if (char.ToUpper(d[0]) != 'M')
             throw new ArgumentException("The path string must start with a Move command.");
         int idxStart = 1;
-        var commands = new List<Command>();
-        var commandLetters = new char[] { 'M', 'L', 'A', 'C', 'Z' };
+        Commands = new List<Command>();
+        var commandLetters = new char[] { 'M', 'L', 'H', 'V', 'C', 'S', 'Q', 'T', 'A', 'Z' };
         for (int i = 1; i < d.Length; i++)
         {
             char dU = char.ToUpper(d[i]);
@@ -54,44 +66,80 @@ public partial class SvgPath : SvgElement
                 List<string> tokens = Command.Parse(text);
                 char cU = char.ToUpper(c);
                 bool isRelative = char.IsLower(c);
-                if (cU == 'M')
+                if (tokens.Count > 0)
                 {
-                    if (tokens.Count % 2 == 0)
+                    if (cU == 'M')
                     {
-                        for (int j = 0; j < tokens.Count; j +=2)
-                            commands.Add(new M(tokens.GetRange(j, 2), isRelative));
+                        if (tokens.Count % 2 == 0)
+                        {
+                            for (int j = 0; j < tokens.Count; j += 2)
+                                Commands.Add(new M(tokens.GetRange(j, 2), isRelative));
+                        }
                     }
-                }
-                else if (cU == 'L')
-                {
-                    if (tokens.Count % 2 == 0)
+                    else if (cU == 'L')
                     {
-                        for (int j = 0; j < tokens.Count; j += 2)
-                            commands.Add(new L(tokens.GetRange(j, 2), isRelative));
+                        if (tokens.Count % 2 == 0)
+                        {
+                            for (int j = 0; j < tokens.Count; j += 2)
+                                Commands.Add(new L(tokens.GetRange(j, 2), isRelative));
+                        }
                     }
-                }
-                else if (cU == 'C')
-                {
-                    if (tokens.Count % 6 == 0)
+                    else if (cU == 'H')
                     {
-                        for (int j = 0; j < tokens.Count; j += 6)
-                            commands.Add(new C(tokens.GetRange(j, 6), isRelative));
+                        for (int j = 0; j < tokens.Count; j++)
+                            Commands.Add(new H(tokens[j], isRelative));
                     }
-                }
-                else if (cU == 'A')
-                {
-                    if (tokens.Count % 7 == 0)
+                    else if (cU == 'V')
                     {
-                        for (int j = 0; j < tokens.Count; j += 7)
-                            commands.Add(new A(tokens.GetRange(j, 7), isRelative));
+                        for (int j = 0; j < tokens.Count; j++)
+                            Commands.Add(new V(tokens[j], isRelative));
+                    }
+                    else if (cU == 'A')
+                    {
+                        if (tokens.Count % 7 == 0)
+                        {
+                            for (int j = 0; j < tokens.Count; j += 7)
+                                Commands.Add(new A(tokens.GetRange(j, 7), isRelative));
+                        }
+                    }
+                    else if (cU == 'C')
+                    {
+                        if (tokens.Count % 6 == 0)
+                        {
+                            for (int j = 0; j < tokens.Count; j += 6)
+                                Commands.Add(new C(tokens.GetRange(j, 6), isRelative));
+                        }
+                    }
+                    else if (cU == 'S')
+                    {
+                        if (tokens.Count % 4 == 0)
+                        {
+                            for (int j = 0; j < tokens.Count; j += 4)
+                                Commands.Add(new C(tokens.GetRange(j, 4), isRelative));
+                        }
+                    }
+                    else if (cU == 'Q')
+                    {
+                        if (tokens.Count % 4 == 0)
+                        {
+                            for (int j = 0; j < tokens.Count; j += 4)
+                                Commands.Add(new Q(tokens.GetRange(j, 4), isRelative));
+                        }
+                    }
+                    else if (cU == 'T')
+                    {
+                        if (tokens.Count % 2 == 0)
+                        {
+                            for (int j = 0; j < tokens.Count; j += 2)
+                                Commands.Add(new T(tokens.GetRange(j, 2), isRelative));
+                        }
                     }
                 }
                 if (dU == 'Z')
-                    commands.Add(new Z(char.IsLower(d[i])));
+                    Commands.Add(new Z(char.IsLower(d[i])));
                 idxStart = i + 1;
             }
         }
-        return commands;
     }
 
 }

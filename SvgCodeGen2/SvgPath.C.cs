@@ -52,5 +52,10 @@ public partial class SvgPath
         {
             throw new NotImplementedException();
         }
+
+        public override string ToString()
+        {
+            return $"{(IsRelative ? 'c' : 'C')}{X1},{Y1} {X2},{Y2} {X},{Y}";
+        }
     }
 }
