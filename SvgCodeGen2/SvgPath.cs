@@ -16,9 +16,14 @@ public partial class SvgPath : SvgElement
     [XmlIgnore]
     public List<Command>? Commands { get; set; }
 
-    public void ArcTo(double rx, double ry, double xRot, bool large, bool sweep, double x, double y)
+    public void ArcTo(double rx, double ry, double xRot, bool large, bool sweep, double x, double y, bool isRelative = false)
     {
-        D += $" A{rx} {ry} {xRot} {Convert.ToInt32(large)} {Convert.ToInt32(sweep)} {x} {y}";
+        D += $"{ (isRelative ? 'a' : 'A')}{rx} {ry},{xRot} {Convert.ToInt32(large)},{Convert.ToInt32(sweep)} {x},{y}";
+    }
+
+    public void CurveTo(double x1, double y1, double x2, double y2, double x, double y, bool isRelative = false)
+    {
+        D += $"{(isRelative ? 'c' : 'C')}{x1} {y1},{x2} {y2},{x} {y}";
     }
 
     public void Close()
@@ -35,6 +40,22 @@ public partial class SvgPath : SvgElement
     {
         string space = D == null ? string.Empty : " ";
         D += $"{space}M{x} {y}";
+    }
+
+    public void Translate(double dx, double dy)
+    {
+        if (Commands is null)
+            return;
+        foreach (var command in Commands)
+        {
+            command.Translate(dx, dy);
+        }
+    }
+
+    public void Format()
+    {
+        DataToCommands();
+        CommandsToData();
     }
 
     public void CommandsToData()
@@ -62,7 +83,8 @@ public partial class SvgPath : SvgElement
             if (commandLetters.Contains(dU) || i == d.Length - 1)
             {
                 char c = d[idxStart - 1];
-                string text = d[idxStart..i];
+                int idxEnd = i == d.Length - 1 ? dU == 'Z' ? i : d.Length : i;
+                string text = d[idxStart..idxEnd];
                 List<string> tokens = Command.Parse(text);
                 char cU = char.ToUpper(c);
                 bool isRelative = char.IsLower(c);

@@ -50,7 +50,12 @@ public partial class SvgPath
 
         public override void Translate(double deltaX, double deltaY)
         {
-            throw new NotImplementedException();
+            X1 += deltaX;
+            Y1 += deltaY;
+            X2 += deltaX;
+            Y2 += deltaY;
+            X += deltaX;
+            Y += deltaY;
         }
 
         public override string ToString()
