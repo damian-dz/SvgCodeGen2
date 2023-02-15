@@ -41,7 +41,5 @@ public class SvgRectGrid : SvgGroup
             Add(new SvgLine(xMin, y, xMax, y));
     }
 
-    private static bool IsInInterval(double x, double min, double max)
-        =>   x >= min && x <= max;
-    
+
 }
