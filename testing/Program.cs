@@ -1,4 +1,5 @@
 ﻿using SvgCodeGen2;
+using SvgCodeGen2.Charts;
 
 Action? Example1 = () =>
 {

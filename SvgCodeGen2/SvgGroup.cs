@@ -8,7 +8,7 @@ using System.Xml.Serialization;
 namespace SvgCodeGen2;
 
 [XmlRoot("g")]
-public sealed class SvgGroup : SvgNestElement
+public class SvgGroup : SvgNestElement
 {
     
 }

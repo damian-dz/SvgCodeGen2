@@ -77,6 +77,16 @@ public class SvgElementBase
         return xElement;
     }
 
+    public List<ParsedTransform> ParseTransforms()
+    {
+        if (string.IsNullOrWhiteSpace(Transform))
+            throw new ArgumentException("The transform string cannot be empty.");
+
+        var transforms = new List<ParsedTransform>();
+
+        return transforms;
+    }
+
     public void SetStroke(Color color)
     {
         Stroke = "#" + ((int)color).ToString("x6");
@@ -85,6 +95,11 @@ public class SvgElementBase
     public override string ToString()
     {
         return ToXElement().ToString();
+    }
+
+    public abstract class ParsedTransform
+    {
+        
     }
 
 }

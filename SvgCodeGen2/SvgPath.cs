@@ -23,7 +23,7 @@ public partial class SvgPath : SvgElement
 
     public void CurveTo(double x1, double y1, double x2, double y2, double x, double y, bool isRelative = false)
     {
-        D += $"{(isRelative ? 'c' : 'C')}{x1} {y1},{x2} {y2},{x} {y}";
+        D += $"{ (isRelative ? 'c' : 'C')}{x1} {y1},{x2} {y2},{x} {y}";
     }
 
     public void Close()
@@ -38,7 +38,7 @@ public partial class SvgPath : SvgElement
 
     public void MoveTo(double x, double y)
     {
-        string space = D == null ? string.Empty : " ";
+        string space = string.IsNullOrWhiteSpace(D) ? string.Empty : " ";
         D += $"{space}M{x} {y}";
     }
 

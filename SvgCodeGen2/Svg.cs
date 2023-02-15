@@ -5,7 +5,7 @@ namespace SvgCodeGen2;
 
 
 [XmlRoot("svg", Namespace = "http://www.w3.org/2000/svg")]
-public sealed class Svg : SvgNestElement
+public class Svg : SvgNestElement
 {
     [XmlAttribute("version")]
     public string? Version;

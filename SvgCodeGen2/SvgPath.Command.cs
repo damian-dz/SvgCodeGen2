@@ -8,19 +8,19 @@ public partial class SvgPath
 
         public static List<string> Parse(string text)
         {
-            string trimmed = text.Trim();
+            string s = text.Trim();
             var tokens = new List<string>();
             int startIdx = 0;
-            for (int i = 0; i < trimmed.Length; i++)
+            for (int i = 0; i < s.Length; i++)
             {
-                if (trimmed[i] == '-')
+                if (s[i] == '-')
                     i++;
-                while (i < trimmed.Length && trimmed[i] != '-' && trimmed[i] != ' ' && trimmed[i] != ',')
+                while (i < s.Length && s[i] != '-' && s[i] != ' ' && s[i] != ',')
                     i++;
                 int stopIdx = i;
                 if (stopIdx > startIdx)
-                    tokens.Add(trimmed[startIdx..stopIdx]);
-                startIdx = (i < trimmed.Length && trimmed[i] == '-') ? i : i + 1;
+                    tokens.Add(s[startIdx..stopIdx]);
+                startIdx = (i < s.Length && s[i] == '-') ? i : i + 1;
             }
             return tokens;
         }
