@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -22,7 +23,9 @@ public class SvgPolyline : SvgElement
         if (numDecimalPlaces == null)
             Points = string.Join(' ', data);
         else
-            Points = string.Join(" ", data.Select(d => d.ToString($"N{numDecimalPlaces}")));
+            Points = string.Join(' ',
+                data.Select(d => d.ToString($"0.{new string('#', numDecimalPlaces.Value)}",
+                CultureInfo.InvariantCulture)));
     }
 
     public SvgPolyline(IEnumerable<double> xData, IEnumerable<double> yData, int? numDecimalPlaces = null)
@@ -31,7 +34,9 @@ public class SvgPolyline : SvgElement
         if (numDecimalPlaces == null)
             Points = string.Join(' ', data);
         else
-            Points = string.Join(" ", data.Select(d => d.ToString($"N{numDecimalPlaces}")));
+            Points = string.Join(' ',
+                data.Select(d => d.ToString($"0.{new string('#', numDecimalPlaces.Value)}",
+                CultureInfo.InvariantCulture)));
     }
 
     public void AddPoint(double x, double y)
